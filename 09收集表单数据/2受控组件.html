@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script src="../js/16.8.4/react.development.js"></script>
+    <script src="../js/16.8.4/react-dom.development.js"></script>
+    <script src="../js/16.8.4/babel.min.js"></script>
+    <script type="text/babel">
+        //将数据保存在组件状态中，用的时候取，为受控组件，类似于双向绑定
+        class Login extends React.Component {
+            state = {
+                username: '',
+                password: ''
+            }
+            saveUsername = (event) => {
+                this.setState({ username: event.target.value })
+            }
+            savePassword = (event) => {
+                this.setState({ password: event.target.value })
+            }
+            submit = (event) => {
+                event.preventDefault();
+                const { username, password } = this.state
+                alert(`用户名为${username},密码为${password}`)
+            }
+            render() {
+                return <form onSubmit={this.submit}>
+                    用户名：<input onChange={this.saveUsername} type="username" placeholder='请输入用户名' />
+                    密码：<input onChange={this.savePassword} type="password" placeholder='请输入用户密码' />
+                    <button>登录</button>
+                </form>
+            }
+        }
+        ReactDOM.render(<Login />, document.getElementById('test'))
+    </script>
+</body>
+
+</html>
