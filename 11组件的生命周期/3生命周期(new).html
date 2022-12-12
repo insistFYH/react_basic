@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script src="../js/16.8.4/react.development.js"></script>
+    <script src="../js/16.8.4/react-dom.development.js"></script>
+    <script src="../js/16.8.4/babel.min.js"></script>
+    <script type="text/babel">
+        /* 
+            1. 初始化阶段: 由ReactDOM.render()触发---初次渲染
+                            1.	constructor()
+                            2.	getDerivedStateFromProps 
+                            3.	render()
+                            4.	componentDidMount() =====> 常用
+                                        一般在这个钩子中做一些初始化的事，例如：开启定时器、发送网络请求、订阅消息
+            2. 更新阶段: 由组件内部this.setSate()或父组件重新render触发
+                            1.	getDerivedStateFromProps
+                            2.	shouldComponentUpdate()
+                            3.	render()
+                            4.	getSnapshotBeforeUpdate
+                            5.	componentDidUpdate()
+            3. 卸载组件: 由ReactDOM.unmountComponentAtNode()触发
+                            1.	componentWillUnmount()  =====> 常用
+                                        一般在这个钩子中做一些收尾的事，例如：关闭定时器、取消订阅消息
+        */
+        class Demo extends React.Component {
+            constructor(props) {
+                super(props)
+                console.log('count---constructor')
+                this.state = ({ count: 0 })
+            }
+            death = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+            }
+            add = () => {
+                const { count } = this.state
+                this.setState({ count: count + 1 })
+            }
+            force = () => {
+                this.forceUpdate()
+            }
+            componentDidMount() {
+                console.log('count---compontDidMount')
+            }
+            componentWillUnmount() {
+                console.log('count---compontWillUnmount')
+            }
+            //必须为静态方法
+            //若state的值在任何时候都取决于props，那么可以使用getDerivedStateFromProps
+            //派生状态的使用容易使得代码冗余，组件难以维护，只作为了解
+            static getDerivedStateFromProps(props, state) {
+                console.log('getDerivedStateFromProps', props, state)
+                //若传入的props和state有属性一致，则页面显示的返回的props，且不可更改
+                // return props
+                return null
+            }
+            getSnapshotBeforeUpdate() {
+                console.log('getSnapshotBeforeUpdate')
+                //返回到componentDidUpdate
+                return 'lucky'
+            }
+            //更新的开关阀门
+            shouldComponentUpdate() {
+                console.log('count---shouldComponentUpdate')
+                return true
+            }
+            componentDidUpdate(preProps, preState, snapshotValue) {
+                console.log('count---compontDidUpdate', preProps, preState, snapshotValue)
+            }
+            render() {
+                const { count } = this.state
+                console.log('count---render')
+                return <div>
+                    <h1>当前和为：{count}</h1>
+                    <button onClick={this.add}>count++</button>
+                    <button onClick={this.force}>不更改状态中数据，强制更新</button>
+                    <button onClick={this.death}>销毁</button>
+                </div>
+            }
+        }
+        ReactDOM.render(<Demo count={199} />, document.getElementById('test'))
+    </script>
+</body>
+
+</html>

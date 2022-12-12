@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script src="../js/16.8.4/react.development.js"></script>
+    <script src="../js/16.8.4/react-dom.development.js"></script>
+    <script src="../js/16.8.4/babel.min.js"></script>
+    <script type="text/babel">
+        class Demo extends React.Component {
+            state = {
+                opacity: 1
+            }
+            death = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+            }
+            componentDidMount() {
+                console.log('compontDidmounted')
+                this.timer = setInterval(() => {
+                    let { opacity } = this.state
+                    opacity -= 0.1
+                    if (opacity <= 0) opacity = 1
+                    this.setState({ opacity: opacity })
+                }, 100)
+            }
+            componentWillUnmount() {
+                console.log('componentWillUnmount')
+                clearInterval(this.timer)
+            }
+            render() {
+                console.log('render')
+                return <div>
+                    <h1 style={{ opacity: this.state.opacity }}>赚不到钱怎么办</h1>
+                    <button onClick={this.death}>不活了</button>
+                </div>
+            }
+        }
+        ReactDOM.render(<Demo />, document.getElementById('test'))
+    </script>
+</body>
+
+</html>
